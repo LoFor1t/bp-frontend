@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct InputTextFieldView: View {
+    var capitalizedSentences: Bool = true
+    
     var fieldName: String
     var placeholder: String
     var errorMessage: String?
@@ -20,6 +22,8 @@ struct InputTextFieldView: View {
                 .font(.caption)
                 .foregroundColor(.black)
             TextField("\(placeholder)", text: $fieldValue)
+                .textInputAutocapitalization(capitalizedSentences ? .sentences : .never)
+                .autocorrectionDisabled(capitalizedSentences ? false : true)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             Text(errorMessage ?? "")
                 .font(.caption)

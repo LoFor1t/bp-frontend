@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CreateNewUserView: View {
-    @StateObject var userModel: UserModel = UserModel()
+    @StateObject var userModel: UserModel = UserModel(companyModel: CompanyModel(companyDomains: ["@example.com"]))
     
     var addNewUser: (UserModel) -> Void
     
@@ -19,12 +19,12 @@ struct CreateNewUserView: View {
                 .padding(.top, 30)
             
             // Name field
-            InputTextFieldView(fieldName: "Name", placeholder: "John Doe", fieldValue: $userModel.name)
+            InputTextFieldView(fieldName: "Name", placeholder: "John Doe", errorMessage: userModel.nameError, fieldValue: $userModel.name)
             .padding(.horizontal)
             .padding(.bottom)
             
             // Email field
-            InputTextFieldView(fieldName: "Email", placeholder: "example@your.domain", fieldValue: $userModel.email)
+            InputTextFieldView(capitalizedSentences: false, fieldName: "Email", placeholder: "example@your.domain", errorMessage: userModel.emailError, fieldValue: $userModel.email)
             .padding(.horizontal)
             .padding(.bottom)
             
@@ -34,7 +34,9 @@ struct CreateNewUserView: View {
             Spacer()
             
             Button(action: {
-                addNewUser(userModel)
+                if (userModel.validate()) {
+                    addNewUser(userModel)
+                }
             }) {
                 Text("Add user")
                     .foregroundColor(.black)
