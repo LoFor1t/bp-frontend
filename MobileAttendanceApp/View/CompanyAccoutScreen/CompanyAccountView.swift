@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct CompanyAccountView: View {
-    @State private var employees = ["employee 1", "employee 2", "employee 3", "employee 4"]
+    @EnvironmentObject var companyModel: CompanyModel
+    
     @State private var showNewUserOverlay = false
     
     var body: some View {
@@ -37,13 +38,13 @@ struct CompanyAccountView: View {
                         }
                     }
                     
-                    Text("Count of employees: \(employees.count)")
+                    Text("Count of employees: \(companyModel.employees.count)")
                         .font(.title2)
                         .padding(.top, 20)
                     
                     ScrollView(showsIndicators: false) {
-                        ForEach(employees, id: \.self) { employee in
-                            UserRowView(employeeUsername: employee)
+                        ForEach(companyModel.employees) { employee in
+                            UserRowView(employeeUsername: employee.name)
                         }
                     }
                 }
@@ -69,7 +70,9 @@ struct CompanyAccountView: View {
                             showNewUserOverlay.toggle()
                         }
                         .overlay {
-                            CreateNewUserView(addNewUser: {_ in})
+                            CreateNewUserView(companyDomains: companyModel.companyDomains, addNewUser: {newEmployee in
+                                showNewUserOverlay.toggle()
+                                companyModel.employees.append(newEmployee)})
                                 .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.7)
                         }
                     
@@ -81,4 +84,5 @@ struct CompanyAccountView: View {
 
 #Preview {
     CompanyAccountView()
+        .environmentObject(CompanyModel(companyName: "LoFor1t corp", companyDomains: ["@example.com"], employees: [EmployeeModel(name: "employee 1"), EmployeeModel(name: "employee 2"), EmployeeModel(name: "employee 3"), EmployeeModel(name: "employee 4")]))
 }

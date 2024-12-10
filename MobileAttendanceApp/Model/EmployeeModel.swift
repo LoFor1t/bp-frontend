@@ -7,26 +7,25 @@
 
 import Foundation
 
-class UserModel: ObservableObject {
-    var name: String
-    var email: String
-    var cardId: String
-    var companyModel: CompanyModel
+class EmployeeModel: ObservableObject, Identifiable {
+    @Published var name: String
+    @Published var email: String
+    @Published var cardId: String
     
     @Published var nameError: String?
     @Published var emailError: String?
     @Published var cardIdError: String?
     
-    init(name: String = "", email: String = "", cardId: String = "", companyModel: CompanyModel) {
+    init(name: String = "", email: String = "", cardId: String = "") {
         self.name = name
         self.email = email
         self.cardId = cardId
-        self.companyModel = companyModel
     }
     
-    func validate() -> Bool {
+    func validate(companyDomains: [String]) -> Bool {
         nameValidation()
-        emailValidation()
+        emailValidation(companyDomains: companyDomains)
+        cardIdValidation()
         
         return nameError == nil && emailError == nil && cardIdError == nil
     }
@@ -45,12 +44,12 @@ class UserModel: ObservableObject {
         nameError = name.isEmpty ? "Name can't be empty" : nameError
     }
     
-    private func emailValidation() -> Void {
+    private func emailValidation(companyDomains: [String]) -> Void {
         emailError = nil
         
         email = email.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        let containEmployeeDomain = companyModel.companyDomains.contains { companyDomain in
+        let containEmployeeDomain = companyDomains.contains { companyDomain in
             email.range(of: companyDomain) != nil
         }
         emailError = !containEmployeeDomain ? "Email should contain company domain" : emailError
@@ -58,5 +57,11 @@ class UserModel: ObservableObject {
         emailError = email.rangeOfCharacter(from: .whitespaces) != nil ? "Email can't contain whitespaces" : emailError
         
         emailError = email.isEmpty ? "Email can't be empty" : emailError
+    }
+    
+    private func cardIdValidation() -> Void {
+        cardIdError = nil
+        
+        cardIdError = cardId.isEmpty ? "Card ID can't be empty" : cardIdError
     }
 }

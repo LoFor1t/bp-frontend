@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct CreateNewUserView: View {
-    @StateObject var userModel: UserModel = UserModel(companyModel: CompanyModel(companyDomains: ["@example.com"]))
+    @StateObject var userModel: EmployeeModel = EmployeeModel()
     
-    var addNewUser: (UserModel) -> Void
+    var companyDomains: [String]
+    
+    var addNewUser: (EmployeeModel) -> Void
     
     var body: some View {
         VStack() {
@@ -28,13 +30,13 @@ struct CreateNewUserView: View {
             .padding(.horizontal)
             .padding(.bottom)
             
-            ScanCardIdButtonView(cardId: $userModel.cardId)
+            ScanCardIdButtonView(cardId: $userModel.cardId, errorMessage: userModel.cardIdError)
             .padding(.horizontal)
             
             Spacer()
             
             Button(action: {
-                if (userModel.validate()) {
+                if (userModel.validate(companyDomains: companyDomains)) {
                     addNewUser(userModel)
                 }
             }) {
@@ -55,7 +57,7 @@ struct CreateNewUserView: View {
 }
 
 #Preview {
-    CreateNewUserView(addNewUser: { newUser in
+    CreateNewUserView(companyDomains: ["@example.com"], addNewUser: { newUser in
         print("Add new user button pressed with parameters: \(newUser.name), \(newUser.email), \(newUser.cardId)")
     })
 }
