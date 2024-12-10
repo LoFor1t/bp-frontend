@@ -8,9 +8,9 @@
 import Foundation
 
 class CompanyModel: ObservableObject {
-    var companyName: String
-    var companyDomains: [String]
-    var employees: [EmployeeModel]
+    @Published var companyName: String
+    @Published var companyDomains: [String]
+    @Published var employees: [EmployeeModel]
     
     @Published var companyNameError: String?
     @Published var companyDomainsError: String?

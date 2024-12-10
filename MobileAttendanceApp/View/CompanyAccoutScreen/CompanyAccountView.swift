@@ -44,7 +44,9 @@ struct CompanyAccountView: View {
                     
                     ScrollView(showsIndicators: false) {
                         ForEach(companyModel.employees) { employee in
-                            UserRowView(employeeUsername: employee.name)
+                            UserRowView(employeeName: employee.name, editUser: {_ in}, deleteUser: { employeeName in
+                                companyModel.employees.removeAll(where: { $0.name == employeeName })
+                            })
                         }
                     }
                 }

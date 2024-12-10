@@ -8,15 +8,19 @@
 import SwiftUI
 
 struct UserRowView: View {
-    var employeeUsername: String
+    var employeeName: String
+    
+    var editUser: (String) -> Void
+    var deleteUser: (String) -> Void
+    
     var body: some View {
         HStack {
-            Text(employeeUsername)
+            Text(employeeName)
                 .padding()
             Spacer()
             
             Button(action: {
-                print("Edit button tapped for \(employeeUsername)")
+                editUser(employeeName)
             }) {
                 Image(systemName: "pencil.circle")
                     .resizable()
@@ -25,7 +29,9 @@ struct UserRowView: View {
             }
             
             Button(action: {
-                print("Delete button tapped for \(employeeUsername)")
+                withAnimation {
+                    deleteUser(employeeName)
+                }
             }) {
                 Image(systemName: "xmark.circle")
                     .resizable()
@@ -41,5 +47,9 @@ struct UserRowView: View {
 }
 
 #Preview {
-    UserRowView(employeeUsername: "employee name")
+    UserRowView(employeeName: "employee name", editUser: { employeeName in
+        print("Edit button tapped for \(employeeName)")
+    }, deleteUser: { employeeName in
+        print("Delete button tapped for \(employeeName)")
+    })
 }
