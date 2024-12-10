@@ -10,7 +10,7 @@ import SwiftUI
 struct UserRowView: View {
     var employeeName: String
     
-    var editUser: (String) -> Void
+    var editUser: () -> Void
     var deleteUser: (String) -> Void
     
     var body: some View {
@@ -20,7 +20,7 @@ struct UserRowView: View {
             Spacer()
             
             Button(action: {
-                editUser(employeeName)
+                editUser()
             }) {
                 Image(systemName: "pencil.circle")
                     .resizable()
@@ -47,8 +47,8 @@ struct UserRowView: View {
 }
 
 #Preview {
-    UserRowView(employeeName: "employee name", editUser: { employeeName in
-        print("Edit button tapped for \(employeeName)")
+    UserRowView(employeeName: "employee name", editUser: {
+        print("Edit button tapped for")
     }, deleteUser: { employeeName in
         print("Delete button tapped for \(employeeName)")
     })

@@ -22,6 +22,16 @@ class EmployeeModel: ObservableObject, Identifiable {
         self.cardId = cardId
     }
     
+    func resetAllFields() {
+        self.name = ""
+        self.email = ""
+        self.cardId = ""
+        
+        nameError = nil
+        emailError = nil
+        cardIdError = nil
+    }
+    
     func validate(companyDomains: [String]) -> Bool {
         nameValidation()
         emailValidation(companyDomains: companyDomains)

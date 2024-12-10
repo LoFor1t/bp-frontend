@@ -10,7 +10,11 @@ import SwiftUI
 struct CompanyAccountView: View {
     @EnvironmentObject var companyModel: CompanyModel
     
-    @State private var showNewUserOverlay = false
+    @State private var showNewEmployeeOverlay = false
+    @State private var showEditEmployeeOverlay = false
+    
+    @StateObject private var newEmployee = EmployeeModel()
+    @State var editEmployeeName: String = ""
     
     var body: some View {
         GeometryReader { geometry in
@@ -44,40 +48,59 @@ struct CompanyAccountView: View {
                     
                     ScrollView(showsIndicators: false) {
                         ForEach(companyModel.employees) { employee in
-                            UserRowView(employeeName: employee.name, editUser: {_ in}, deleteUser: { employeeName in
+                            UserRowView(employeeName: employee.name, editUser: {
+                                showEditEmployeeOverlay = true
+                                editEmployeeName = employee.name
+                            }, deleteUser: { employeeName in
                                 companyModel.employees.removeAll(where: { $0.name == employeeName })
                             })
                         }
                     }
                 }
-                .navigationBarBackButtonHidden(showNewUserOverlay)
+                .navigationBarBackButtonHidden(showNewEmployeeOverlay || showEditEmployeeOverlay)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
                             withAnimation {
-                                showNewUserOverlay.toggle()
+                                showNewEmployeeOverlay.toggle()
                             }
                         }) {
-                            if !showNewUserOverlay {
-                                Text("Add new user")
+                            if !showNewEmployeeOverlay && !showEditEmployeeOverlay {
+                                Text("Add new employee")
                             }
                         }
                     }
                 }
                 
-                if showNewUserOverlay {
+                if showNewEmployeeOverlay {
                     Color.black.opacity(0.5)
                         .edgesIgnoringSafeArea(.all)
                         .onTapGesture {
-                            showNewUserOverlay.toggle()
+                            showNewEmployeeOverlay.toggle()
                         }
                         .overlay {
-                            CreateNewUserView(companyDomains: companyModel.companyDomains, addNewUser: {newEmployee in
-                                showNewUserOverlay.toggle()
-                                companyModel.employees.append(newEmployee)})
+                            EditUserView(employeeModel: newEmployee, buttonText: "Add Employee", companyDomains: companyModel.companyDomains, onEditUser: {newEmployee in
+                                showNewEmployeeOverlay.toggle()
+                                companyModel.employees.append(EmployeeModel(name: newEmployee.name, email: newEmployee.email, cardId: newEmployee.cardId))
+                                self.newEmployee.resetAllFields()
+                            })
                                 .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.7)
                         }
                     
+                }
+                
+                if showEditEmployeeOverlay {
+                    Color.black.opacity(0.5)
+                        .edgesIgnoringSafeArea(.all)
+                        .onTapGesture {
+                            showEditEmployeeOverlay.toggle()
+                        }
+                        .overlay {
+                            EditUserView(employeeModel: companyModel.employees.first(where: {$0.name == editEmployeeName})!, buttonText: "Edit Employee", companyDomains: companyModel.companyDomains, onEditUser: {newEmployee in
+                                showEditEmployeeOverlay.toggle()
+                            })
+                                .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.7)
+                        }
                 }
             }
         }
