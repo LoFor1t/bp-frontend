@@ -22,6 +22,16 @@ class CompanyModel: ObservableObject {
         self.employees = employees
     }
     
+    func editFromModel(companyModel: CompanyModel) {
+        self.companyName = companyModel.companyName
+        self.companyDomains = companyModel.companyDomains
+        self.employees = companyModel.employees
+    }
+    
+    func copy() -> CompanyModel {
+        CompanyModel(companyName: companyName, companyDomains: companyDomains, employees: employees)
+    }
+    
     func validate() -> Bool {
         validateCompanyName()
         validateCompanyDomains()
@@ -29,13 +39,13 @@ class CompanyModel: ObservableObject {
         return companyNameError == nil && companyDomainsError == nil && companyEmployeesError == nil
     }
     
-    func validateCompanyName() -> Void {
+    private func validateCompanyName() -> Void {
         companyNameError = nil
         
         companyNameError = companyName.isEmpty ? "Company name can't be empty" : nil
     }
     
-    func validateCompanyDomains() -> Void {
+    private func validateCompanyDomains() -> Void {
         companyDomainsError = nil
         
         companyDomainsError = companyDomains.isEmpty ? "Company domains can't be empty" : nil

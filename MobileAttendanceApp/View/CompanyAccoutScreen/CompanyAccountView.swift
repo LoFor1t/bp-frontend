@@ -12,6 +12,7 @@ struct CompanyAccountView: View {
     
     @State private var showNewEmployeeOverlay = false
     @State private var showEditEmployeeOverlay = false
+    @State private var showEditCompanyOverlay = false
     
     @StateObject private var newEmployee = EmployeeModel()
     @State var editEmployeeName: String = ""
@@ -30,7 +31,7 @@ struct CompanyAccountView: View {
                         Spacer()
                         VStack(alignment: .leading) {
                             Button(action: {
-                                print("Add button tapped")
+                                showEditCompanyOverlay = true
                             }) {
                                 Image(systemName: "pencil.circle")
                                     .resizable()
@@ -98,6 +99,21 @@ struct CompanyAccountView: View {
                         .overlay {
                             EditUserView(employeeModel: companyModel.employees.first(where: {$0.name == editEmployeeName})!, buttonText: "Edit Employee", companyDomains: companyModel.companyDomains, onEditUser: {newEmployee in
                                 showEditEmployeeOverlay.toggle()
+                            })
+                                .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.7)
+                        }
+                }
+                
+                if showEditCompanyOverlay {
+                    Color.black.opacity(0.5)
+                        .edgesIgnoringSafeArea(.all)
+                        .onTapGesture {
+                            showEditCompanyOverlay.toggle()
+                        }
+                        .overlay {
+                            EditCompanyView(companyModel: companyModel.copy(), onEdit: { editedModel in
+                                showEditCompanyOverlay.toggle()
+                                companyModel.editFromModel(companyModel: editedModel)
                             })
                                 .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.7)
                         }

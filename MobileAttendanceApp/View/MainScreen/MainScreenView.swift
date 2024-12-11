@@ -8,31 +8,58 @@
 import SwiftUI
 
 struct MainScreenView: View {
+    @State private var isVisibleAttendanceOverlay: Bool = false
+
     var body: some View {
         NavigationStack {
-            VStack {
-                HStack {
-                    NavigationLink(destination: CompanyAccountView()) {
-                        Image(systemName: "person.crop.circle")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                            .foregroundColor(.blue)
-                            .padding(.leading, 20)
+            ZStack {
+                VStack {
+                    HStack {
+                        NavigationLink(destination: CompanyAccountView()) {
+                            Image(systemName: "person.crop.circle")
+                                .resizable()
+                                .frame(width: 50, height: 50)
+                                .foregroundColor(.blue)
+                                .padding(.leading, 20)
+                        }
+                        Spacer()
                     }
                     Spacer()
+                    
+                    Button(action: {
+                        withAnimation {
+                            isVisibleAttendanceOverlay.toggle()
+                        }
+                        print("tap to scan check")
+                    }) {
+                        Text("Tap to Scan")
+                            .font(.title)
+                            .foregroundColor(.blue)
+                            .padding(.bottom, 80)
+                    }
+                    
+                    Spacer()
                 }
-                Spacer()
+                .disabled(isVisibleAttendanceOverlay)
                 
-                Button(action: {
-                    print("tap to scan check")
-                }) {
-                    Text("Tap to Scan")
-                        .font(.title)
-                        .foregroundColor(.blue)
-                        .padding(.bottom, 80)
+                if isVisibleAttendanceOverlay {
+                    Color.black.opacity(0.5)
+                        .edgesIgnoringSafeArea(.all)
+                        .overlay {
+                            Text("Attendance saved successfully")
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(20)
+                                .shadow(radius: 10)
+                                .onAppear {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                        withAnimation {
+                                            isVisibleAttendanceOverlay = false
+                                        }
+                                    }
+                                }
+                        }
                 }
-                
-                Spacer()
             }
         }
     }
