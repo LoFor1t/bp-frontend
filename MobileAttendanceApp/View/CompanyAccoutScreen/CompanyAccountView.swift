@@ -97,8 +97,11 @@ struct CompanyAccountView: View {
                             showEditEmployeeOverlay.toggle()
                         }
                         .overlay {
-                            EditUserView(employeeModel: companyModel.employees.first(where: {$0.name == editEmployeeName})!, buttonText: "Edit Employee", companyDomains: companyModel.companyDomains, onEditUser: {newEmployee in
+                            EditUserView(employeeModel: companyModel.employees.first(where: {$0.name == editEmployeeName})!.copy(), buttonText: "Edit Employee", companyDomains: companyModel.companyDomains, onEditUser: {newEmployee in
                                 showEditEmployeeOverlay.toggle()
+                                if let index = companyModel.employees.firstIndex(where: { $0.name == editEmployeeName }) {
+                                        companyModel.employees[index] = newEmployee
+                                    }
                             })
                                 .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.7)
                         }

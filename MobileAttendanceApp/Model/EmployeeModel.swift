@@ -32,6 +32,10 @@ class EmployeeModel: ObservableObject, Identifiable {
         cardIdError = nil
     }
     
+    func copy() -> EmployeeModel {
+        .init(name: name, email: email, cardId: cardId)
+    }
+    
     func validate(companyDomains: [String]) -> Bool {
         nameValidation()
         emailValidation(companyDomains: companyDomains)
