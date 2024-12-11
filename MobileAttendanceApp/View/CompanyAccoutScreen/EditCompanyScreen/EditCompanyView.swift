@@ -12,6 +12,8 @@ struct EditCompanyView: View {
     
     var onEdit: (CompanyModel) -> Void
     
+    private let hapticFeedback = UINotificationFeedbackGenerator()
+    
     var body: some View {
         VStack() {
             Text("New user")
@@ -34,6 +36,7 @@ struct EditCompanyView: View {
             Button(action: {
                 if (companyModel.validate()) {
                     onEdit(companyModel)
+                    hapticFeedback.notificationOccurred(.success)
                 }
             }) {
                 FullWidthButtonView(buttonText: "Save")

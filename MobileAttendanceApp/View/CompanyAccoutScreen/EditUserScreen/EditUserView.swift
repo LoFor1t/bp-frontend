@@ -15,6 +15,8 @@ struct EditUserView: View {
     
     var onEditUser: (EmployeeModel) -> Void
     
+    private let hapticFeedback = UINotificationFeedbackGenerator()
+    
     var body: some View {
         VStack() {
             Text("New user")
@@ -39,6 +41,7 @@ struct EditUserView: View {
             Button(action: {
                 if (employeeModel.validate(companyDomains: companyDomains)) {
                     onEditUser(employeeModel)
+                    hapticFeedback.notificationOccurred(.success)
                 }
             }) {
                 Text(buttonText)

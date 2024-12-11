@@ -13,6 +13,8 @@ struct UserRowView: View {
     var editUser: () -> Void
     var deleteUser: (String) -> Void
     
+    private let hapticFeedback = UINotificationFeedbackGenerator()
+    
     var body: some View {
         HStack {
             Text(employeeName)
@@ -31,6 +33,7 @@ struct UserRowView: View {
             Button(action: {
                 withAnimation {
                     deleteUser(employeeName)
+                    hapticFeedback.notificationOccurred(.error)
                 }
             }) {
                 Image(systemName: "xmark.circle")

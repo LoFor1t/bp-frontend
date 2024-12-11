@@ -9,6 +9,8 @@ import SwiftUI
 
 struct MainScreenView: View {
     @State private var isVisibleAttendanceOverlay: Bool = false
+    
+    private let hapticFeedback = UINotificationFeedbackGenerator()
 
     var body: some View {
         NavigationStack {
@@ -29,6 +31,7 @@ struct MainScreenView: View {
                     Button(action: {
                         withAnimation {
                             isVisibleAttendanceOverlay.toggle()
+                            hapticFeedback.notificationOccurred(.success)
                         }
                         print("tap to scan check")
                     }) {
@@ -45,6 +48,11 @@ struct MainScreenView: View {
                 if isVisibleAttendanceOverlay {
                     Color.black.opacity(0.5)
                         .edgesIgnoringSafeArea(.all)
+                        .onTapGesture {
+                            withAnimation {
+                                isVisibleAttendanceOverlay = false
+                            }
+                        }
                         .overlay {
                             Text("Attendance saved successfully")
                                 .padding()
