@@ -58,7 +58,7 @@ struct CompanyAccountView: View {
                         }
                     }
                 }
-                .navigationBarBackButtonHidden(showNewEmployeeOverlay || showEditEmployeeOverlay)
+                .navigationBarBackButtonHidden(showNewEmployeeOverlay || showEditEmployeeOverlay || showEditCompanyOverlay)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
@@ -66,7 +66,7 @@ struct CompanyAccountView: View {
                                 showNewEmployeeOverlay.toggle()
                             }
                         }) {
-                            if !showNewEmployeeOverlay && !showEditEmployeeOverlay {
+                            if !showNewEmployeeOverlay && !showEditEmployeeOverlay && !showEditCompanyOverlay {
                                 Text("Add new employee")
                             }
                         }
